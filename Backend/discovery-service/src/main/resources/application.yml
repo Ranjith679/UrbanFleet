@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: discovery-service   # This must match the config file name in your repo (e.g., myservice.yml)
+  config:
+      import: "configserver:http://localhost:8888"  # URL of your Config Server
