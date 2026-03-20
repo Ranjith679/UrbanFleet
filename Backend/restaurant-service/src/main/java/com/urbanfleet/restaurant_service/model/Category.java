@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.awt.*;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -29,5 +29,5 @@ public class Category {
 
     // optional back reference
     @ManyToMany(mappedBy = "categories")  // in industries using set for many to many to avoid duplicates and fast lookup
-    private Set<MenuItem> menuItems = new HashSet<>();
+    private Set<MenuItems> menuItems = new HashSet<>();
 }

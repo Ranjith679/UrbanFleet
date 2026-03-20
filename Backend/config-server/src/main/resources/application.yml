@@ -8,5 +8,5 @@ spring:
     config:
       server:
         native:
-          searchLocations: file:///D:\Java Projects\Backend\config-server\config-files-dev
+          searchLocations: file:///D:\Java Projects\UrbanFleet\Backend\config-server\config-files-dev
 

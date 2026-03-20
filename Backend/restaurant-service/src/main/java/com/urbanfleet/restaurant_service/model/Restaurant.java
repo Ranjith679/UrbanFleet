@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -49,8 +51,13 @@ public class Restaurant {
     @Column(nullable = false)
     private String city;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "restaurant_images",
+            joinColumns = @JoinColumn(name = "restaurant_id")
+    )
     @Column(name = "image_url")
-    private String imageUrl;
+    private List<String> imageUrls = new ArrayList<>();
 
     @Column(name = "owner_id", nullable = false)
     private UUID ownerId;

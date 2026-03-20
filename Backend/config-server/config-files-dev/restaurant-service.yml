@@ -8,6 +8,18 @@ spring:
     username: sa
     password:
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: "superSecretKeyChangeThisInProd123!"
+  codec:
+    max-in-memory-size: 50MB
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
   h2:
     console:
       enabled: true
@@ -23,3 +35,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+minio:
+  url: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: restaurant-images

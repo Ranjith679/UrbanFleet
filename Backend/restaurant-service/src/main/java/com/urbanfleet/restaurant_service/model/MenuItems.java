@@ -37,7 +37,7 @@ public class MenuItems {
      LAZY - Only when needed or asked anywhere
      select *
 
-     if a entity has many relations one simple entry fetching makes 5 -10 queries run
+     if an entity has many relations one simple entry fetching makes 5 -10 queries run
      slow , memory , cpu heavy -> low performance
      */
 
@@ -66,7 +66,7 @@ public class MenuItems {
     private String imageUrl;
 
     @Column(nullable = false)
-    private boolean available = true;
+    private boolean available = true; 
 
     @ManyToMany
     @JoinTable(
