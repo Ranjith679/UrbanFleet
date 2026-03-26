@@ -21,6 +21,8 @@ spring:
           uri: lb://restaurant-service
           predicates:
             - Path=/api/v1/restaurant/**
+            - Path=/api/v1/menu/**
+
 
 eureka:
   client:

@@ -1,7 +1,9 @@
 package com.urbanfleet.restaurant_service.service;
 
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,9 @@ public class MinioService {
             throw new RuntimeException("File is empty");
         }
 
-//        if (!file.getContentType().startsWith("image/")) {
-//            throw new RuntimeException("Only image files are allowed");
-//        }
         String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
 
+        // Upload
         minioClient.putObject(
                 PutObjectArgs.builder()
                         .bucket(bucketName)
@@ -40,7 +40,7 @@ public class MinioService {
                         .build()
         );
 
-        return "http://localhost:9000/" + bucketName + "/" + fileName;
+        return fileName;
     }
 
     public List<String> uploadFiles(List<MultipartFile> files) throws Exception {
@@ -61,5 +61,19 @@ public class MinioService {
         }
 
         return urls;
+    }
+
+    public String getImageUrl(String fileName) throws Exception {
+        // 🔥 Generate pre-signed URL . By default just like s3 buckets in minio are private and needs signature in the request or the bucket to be public
+        String url = minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .method(Method.GET)
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .expiry(60 * 60) // 1 hour
+                        .build()
+        );
+
+        return url;
     }
 }

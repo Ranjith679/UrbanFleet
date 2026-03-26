@@ -27,7 +27,7 @@ public class Category {
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
-    // optional back reference
+    // Inverse side It does not make any updates anywhere
     @ManyToMany(mappedBy = "categories")  // in industries using set for many to many to avoid duplicates and fast lookup
     private Set<MenuItems> menuItems = new HashSet<>();
 }

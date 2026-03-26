@@ -11,14 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -44,6 +41,41 @@ public class RestaurantController {
         RestaurantResponse response = service.create(request, imageUrls);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RestaurantResponse> getById(@PathVariable UUID id) {
+
+        RestaurantResponse response = service.getById(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RestaurantResponse>> getByCity(
+            @RequestParam(required = false) String city) {
+
+        List<RestaurantResponse> response = service.getRestaurants(city);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RestaurantResponse> update(
+            @PathVariable UUID id,
+            @RequestBody @Valid RestaurantRequest request) {
+
+        RestaurantResponse response = service.update(id, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+
+        service.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 
