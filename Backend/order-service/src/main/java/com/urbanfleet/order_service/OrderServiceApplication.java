@@ -1,0 +1,18 @@
+package com.urbanfleet.order_service;
+
+import com.urbanfleet.order_service.clients.RestaurantClient;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+@SpringBootApplication
+@EnableFeignClients(
+		basePackageClasses = RestaurantClient.class
+)
+public class OrderServiceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OrderServiceApplication.class, args);
+	}
+
+}
