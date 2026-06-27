@@ -8,4 +8,4 @@ spring:
 eureka:
   client:
     register-with-eureka: false   # Don't register the server itself
-    fetch-registry: false         # Don't try to fetch other registries
+    fetch-registry: false         # By default it tries sharing registry info to peer nodes (other eruka servers ) .But ours is single node set-up so disable it.

@@ -45,7 +45,7 @@ public class MenuItems {
     private boolean available = true; 
 
 
-    //Owner side which make add the category to middle table so it has control by @JoiTable
+    //Owner side which add the category to middle table so it has control by @JoiTable
     @ManyToMany
     @JoinTable(
             name = "menu_item_category",

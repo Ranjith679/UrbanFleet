@@ -12,4 +12,6 @@ public interface MenuItemsService {
     List<MenuItemResponse> getMenuByRestaurant(UUID restaurantId);
     MenuItemResponse update(UUID id, MenuItemRequest request);
     void delete(UUID id);
+
+    MenuItemResponse getMenuByMenuId(UUID id);
 }

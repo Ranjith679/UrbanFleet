@@ -51,4 +51,17 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+    @ExceptionHandler(MenuItemNotFoundException.class)
+    public ResponseEntity<?> handleMenuNotExist(MenuItemNotFoundException ex) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                Map.of(
+                        "timestamp", LocalDateTime.now(),
+                        "status", 409,
+                        "error", "Conflict",
+                        "message", ex.getMessage()
+                )
+        );
+    }
 }

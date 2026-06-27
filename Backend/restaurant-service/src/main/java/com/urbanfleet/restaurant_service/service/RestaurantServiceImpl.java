@@ -1,8 +1,10 @@
 package com.urbanfleet.restaurant_service.service;
 
+import com.urbanfleet.restaurant_service.dto.RestaurantEvent;
 import com.urbanfleet.restaurant_service.dto.RestaurantRequest;
 import com.urbanfleet.restaurant_service.dto.RestaurantResponse;
 import com.urbanfleet.restaurant_service.exceptions.RestaurantNotFoundException;
+import com.urbanfleet.restaurant_service.kafka.RestaurantEventProducer;
 import com.urbanfleet.restaurant_service.model.Restaurant;
 import com.urbanfleet.restaurant_service.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     private final RestaurantRepository repository;
     private final MinioService minioService;
+    private final RestaurantEventProducer producer;
 
     @Override
     public RestaurantResponse create(RestaurantRequest request, List<String> imageUrls) {
@@ -33,6 +36,16 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         Restaurant saved = repository.save(restaurant);
 
+        RestaurantEvent event = new RestaurantEvent(
+                "restaurant.created",
+                saved.getId().toString(),
+                saved.getName(),
+                saved.getCity(),
+                saved.getAddress()
+        );
+
+        log.info("Sending menu item event: {}", event);
+        producer.sendEvent(event);
         return mapToResponse(saved);
     }
 
@@ -100,6 +113,16 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         repository.save(restaurant);
 
+        RestaurantEvent event = new RestaurantEvent(
+                "restaurant.updated",
+                restaurant.getId().toString(),
+                restaurant.getName(),
+                restaurant.getCity(),
+                restaurant.getAddress()
+        );
+
+        log.info("Sending menu item event: {}", event);
+        producer.sendEvent(event);
         return mapToResponse(restaurant);
     }
 
@@ -111,6 +134,17 @@ public class RestaurantServiceImpl implements RestaurantService{
                 .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with id: " + id));
 
         repository.delete(restaurant);
+
+        RestaurantEvent event = new RestaurantEvent(
+                "restaurant.deleted",
+                restaurant.getId().toString(),
+                restaurant.getName(),
+                restaurant.getCity(),
+                restaurant.getAddress()
+        );
+
+        log.info("Sending menu item event: {}", event);
+        producer.sendEvent(event);
     }
 
 }

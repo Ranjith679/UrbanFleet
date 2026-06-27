@@ -12,7 +12,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          secret-key: "superSecretKeyChangeThisInProd123!"
+          secret-key: "urbanfleet-super-secret-key-123456789012"
   codec:
     max-in-memory-size: 50MB
   servlet:
@@ -30,6 +30,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 eureka:
   client:

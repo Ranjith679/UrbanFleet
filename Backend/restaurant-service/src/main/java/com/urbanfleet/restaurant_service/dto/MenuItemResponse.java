@@ -11,7 +11,6 @@ public class MenuItemResponse {
     private BigDecimal price;
     private String imageUrl;
     private Boolean available;
-
     private UUID restaurantId;
 
     // getters & setters

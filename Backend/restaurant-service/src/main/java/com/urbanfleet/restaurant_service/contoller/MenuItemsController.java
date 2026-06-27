@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,13 +19,15 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/menu")
+@RequestMapping("/api/v1/menu")
 public class MenuItemsController {
 
     private final MenuItemsService service;
     private final MinioService minioService;
     // Menu REST API
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/uploadMenu/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MenuItemResponse> createMenuItem(
             @PathVariable UUID id,
@@ -40,12 +43,25 @@ public class MenuItemsController {
                 .body(service.createMenuItem(id, request , imageUrl));
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<List<MenuItemResponse>> getMenu(@PathVariable UUID id) {
 
         return ResponseEntity.ok(service.getMenuByRestaurant(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("menu/{id}")
+    public MenuItemResponse getMenuById(@PathVariable UUID id) {
+
+        return service.getMenuByMenuId(id);
+    }
+
+
+
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{menuItemId}")
     public ResponseEntity<MenuItemResponse> update(
             @PathVariable UUID menuItemId,
@@ -54,6 +70,8 @@ public class MenuItemsController {
         return ResponseEntity.ok(service.update(menuItemId, request));
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{menuItemId}")
     public ResponseEntity<Void> deleteMenu(@PathVariable UUID menuItemId) {
 

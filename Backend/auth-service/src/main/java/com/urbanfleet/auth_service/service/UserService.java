@@ -35,7 +35,7 @@ public class UserService {
         user.setName(userReqDto.getName());
         user.setEmail(userReqDto.getEmail());
         user.setPasswordHash(passwordEncoder.encode(userReqDto.getPasswordHash()));
-        user.setRole(Roles.USER);
+        user.setRole(Roles.ADMIN);
         user.setCreatedDate(LocalDate.now());
         user.setUpdatedDate(LocalDate.now());
 

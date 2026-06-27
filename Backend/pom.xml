@@ -8,8 +8,10 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.5 </version> <!-- Latest stable Boot 3.5.x -->
+    <version>3.2.5</version> <!-- or whichever Boot version you want -->
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
+
 
   <groupId>org.urbanfleet</groupId>
   <artifactId>Backend</artifactId>
@@ -26,6 +28,7 @@
 
   <dependencyManagement>
     <dependencies>
+
       <!-- Spring Cloud BOM for aligned versions -->
       <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -49,11 +52,11 @@
     <module>discovery-service</module>
      <module>auth-service</module>
      <module>restaurant-service</module>
-    <!-- <module>order-service</module> -->
-    <!-- <module>payment-service</module> -->
+     <module>search-service</module>
+     <module>order-service</module>
+     <module>payment-service</module>
     <!-- <module>delivery-service</module> -->
     <!-- <module>notification-service</module> -->
-    <!-- <module>search-service</module> -->
     <!-- <module>tracking-service</module> -->
   </modules>
 </project>

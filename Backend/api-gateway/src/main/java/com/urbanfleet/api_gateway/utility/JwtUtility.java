@@ -10,7 +10,7 @@ public class JwtUtility {
     public class JwtUtil {
 
         // Same secrete key used to sign the token
-        private final String secret = "superSecretKeyChangeThisInProd123!";
+        private final String secret = "urbanfleet-super-secret-key-123456789012";
 
         /*
         method does 2 parts

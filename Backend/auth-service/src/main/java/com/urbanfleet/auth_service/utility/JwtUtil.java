@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String secret = "superSecretKeyChangeThisInProd123!";
+    private final String secret = "urbanfleet-super-secret-key-123456789012";
 
     public String generateToken(Users user) {
         return Jwts.builder()
