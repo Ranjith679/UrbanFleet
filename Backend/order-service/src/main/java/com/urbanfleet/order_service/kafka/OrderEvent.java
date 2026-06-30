@@ -1,7 +1,5 @@
-package com.urbanfleet.order_service.dto;
+package com.urbanfleet.order_service.kafka;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;

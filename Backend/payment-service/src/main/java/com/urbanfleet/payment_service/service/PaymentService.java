@@ -12,6 +12,7 @@ import com.urbanfleet.payment_service.kafka.PaymentEventProducer;
 import com.urbanfleet.payment_service.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
@@ -19,6 +20,7 @@ import com.stripe.net.Webhook;
 @Service
 @Slf4j
 public class PaymentService {
+
 
     @Autowired
     PaymentRepository repository;
@@ -33,6 +35,14 @@ public class PaymentService {
                         // Stripe expects paise
                         .setAmount((long)(request.getAmount() * 100))
                         .setCurrency("inr")
+                        // Automatically choose payment methods (UPI, cards , Wallets ,Bak payemnts)
+                        .setAutomaticPaymentMethods(
+                                PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                        // Enable automatic payment methods
+                                        .setEnabled(true)
+                                        // usually stripe wants to redirect user after payment , for postman testing we disable it
+                                        .setAllowRedirects(PaymentIntentCreateParams.AutomaticPaymentMethods.AllowRedirects.NEVER).build()
+                        )
                         .build();
 
         PaymentIntent intent = PaymentIntent.create(params);
@@ -46,6 +56,7 @@ public class PaymentService {
 
         repository.save(payment);
 
+        System.out.println(intent.getId() + " , "+ intent.getClientSecret());
         return new PaymentResponse(
                 intent.getId(),
                 intent.getClientSecret()
@@ -53,12 +64,12 @@ public class PaymentService {
     }
 
 
-    public void processWebhook(String payload) {
+    public void processWebhook(String payload, String signature) {
 
         try {
 
-            // Convert webhook JSON string into Stripe Event object
-            Event event = Event.GSON.fromJson(payload, Event.class);
+            // Verify webhook is really from Stripe
+            Event event = Webhook.constructEvent(payload, signature, "whsec_d3700d61732b20b0d89b96ed5f49db53754c5d7e33ae2826a016fbbf00cca671");
 
             log.info("Received Stripe event: {}", event.getType());
 
@@ -80,6 +91,7 @@ public class PaymentService {
 
     // Handle successful payment
     private void handleSuccess(Event event) {
+
 
         PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElseThrow();
 

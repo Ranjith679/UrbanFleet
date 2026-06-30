@@ -25,11 +25,19 @@ public class PaymentController {
         return service.create(request);
     }
 
+    // Receives webhook from Stripe
     @PostMapping("/webhook")
-    public ResponseEntity<Void> webhook(@RequestBody String payload) {
+    public ResponseEntity<Void> webhook(
 
-        // Process webhook
-        service.processWebhook(payload);
+            // Raw JSON sent by Stripe
+            @RequestBody String payload,
+
+            // Signature header sent by Stripe
+            @RequestHeader("Stripe-Signature") String signature
+
+    ) {
+
+        service.processWebhook(payload, signature);
 
         return ResponseEntity.ok().build();
     }
