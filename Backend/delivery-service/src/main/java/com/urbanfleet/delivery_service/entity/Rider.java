@@ -17,6 +17,12 @@ public class Rider {
 
     private String name;
 
-    // true means rider can take order
+    // Current latitude of rider
+    private Double latitude;
+
+    // Current longitude of rider
+    private Double longitude;
+
+    // Can rider take new order?
     private boolean available;
 }

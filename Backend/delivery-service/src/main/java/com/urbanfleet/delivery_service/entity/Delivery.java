@@ -1,5 +1,6 @@
 package com.urbanfleet.delivery_service.entity;
 
+import com.urbanfleet.delivery_service.constants.DeliveryStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,4 +24,36 @@ public class Delivery {
 
     // Current delivery status
     private DeliveryStatus status;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(UUID orderId) {
+        this.orderId = orderId;
+    }
+
+    public UUID getRiderId() {
+        return riderId;
+    }
+
+    public void setRiderId(UUID riderId) {
+        this.riderId = riderId;
+    }
+
+    public DeliveryStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeliveryStatus status) {
+        this.status = status;
+    }
 }

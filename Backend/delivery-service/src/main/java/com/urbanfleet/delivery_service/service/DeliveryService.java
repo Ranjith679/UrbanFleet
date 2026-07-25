@@ -3,6 +3,8 @@ package com.urbanfleet.delivery_service.service;
 import com.urbanfleet.delivery_service.constants.DeliveryStatus;
 import com.urbanfleet.delivery_service.entity.Delivery;
 import com.urbanfleet.delivery_service.entity.Rider;
+import com.urbanfleet.delivery_service.kafka.DeliveryAssignedEvent;
+import com.urbanfleet.delivery_service.kafka.DeliveryProducer;
 import com.urbanfleet.delivery_service.repository.DeliveryRepository;
 import com.urbanfleet.delivery_service.repository.RiderRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class DeliveryService {
 
     private final RiderRepository riderRepository;
@@ -19,6 +20,12 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
 
     private final DeliveryProducer producer;
+
+    public DeliveryService(RiderRepository riderRepository, DeliveryRepository deliveryRepository, DeliveryProducer producer) {
+        this.riderRepository = riderRepository;
+        this.deliveryRepository = deliveryRepository;
+        this.producer = producer;
+    }
 
     public void assign(UUID orderId) {
 
@@ -45,11 +52,6 @@ public class DeliveryService {
         deliveryRepository.save(delivery);
 
         // Notify Order Service
-        producer.send(
-                new DeliveryAssignedEvent(
-                        orderId,
-                        rider.getId()
-                )
-        );
+        producer.send(new DeliveryAssignedEvent(orderId, rider.getId()));
     }
 }

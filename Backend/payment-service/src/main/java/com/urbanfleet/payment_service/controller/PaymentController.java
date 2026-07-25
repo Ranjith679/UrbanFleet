@@ -37,6 +37,7 @@ public class PaymentController {
 
     ) {
 
+        System.out.println("WEBHOOK HIT");
         service.processWebhook(payload, signature);
 
         return ResponseEntity.ok().build();

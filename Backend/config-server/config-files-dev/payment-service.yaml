@@ -10,7 +10,6 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-
   h2:
     console:
       enabled: true                 # enables the H2 web console

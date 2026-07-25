@@ -5,10 +5,13 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class DeliveryProducer {
 
     private final KafkaTemplate<String, DeliveryAssignedEvent> kafkaTemplate;
+
+    public DeliveryProducer(KafkaTemplate<String, DeliveryAssignedEvent> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     public void send(DeliveryAssignedEvent event) {
 
