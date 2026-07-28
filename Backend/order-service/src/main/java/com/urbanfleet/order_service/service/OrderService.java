@@ -7,15 +7,13 @@ import com.urbanfleet.order_service.constants.OrderStatus;
 import com.urbanfleet.order_service.dto.*;
 import com.urbanfleet.order_service.entity.Order;
 import com.urbanfleet.order_service.entity.OrderItem;
-import com.urbanfleet.order_service.kafka.OrderEvent;
 import com.urbanfleet.order_service.kafka.OrderEventProducer;
-import com.urbanfleet.order_service.kafka.PaymentEvent;
 import com.urbanfleet.order_service.repositories.OrderItemRepository;
 import com.urbanfleet.order_service.repositories.OrderRepository;
+import com.urbanfleet.events.order.OrderEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,7 +23,6 @@ import java.util.UUID;
 
 @Service
 public class OrderService {
-
 
 
     @Autowired
@@ -39,15 +36,15 @@ public class OrderService {
 
 
     @Autowired
-    public RestaurantClient restaurantClient;
-
-    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
-
-    @Autowired
     public OrderStateMachine stateMachine;
 
     @Autowired
+    public RestaurantClient restaurantClient;
+    @Autowired
     public PaymentClient paymentClient;
+
+
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     public Order create(CreateOrderRequest request) {
 

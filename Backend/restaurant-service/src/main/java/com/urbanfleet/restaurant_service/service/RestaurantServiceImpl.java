@@ -1,12 +1,12 @@
 package com.urbanfleet.restaurant_service.service;
 
-import com.urbanfleet.restaurant_service.dto.RestaurantEvent;
 import com.urbanfleet.restaurant_service.dto.RestaurantRequest;
 import com.urbanfleet.restaurant_service.dto.RestaurantResponse;
 import com.urbanfleet.restaurant_service.exceptions.RestaurantNotFoundException;
 import com.urbanfleet.restaurant_service.kafka.RestaurantEventProducer;
 import com.urbanfleet.restaurant_service.model.Restaurant;
 import com.urbanfleet.restaurant_service.repository.RestaurantRepository;
+import com.urbanfleet.events.restaurant.RestaurantEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

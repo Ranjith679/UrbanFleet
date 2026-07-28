@@ -63,6 +63,12 @@
 			<artifactId>minio</artifactId>
 			<version>8.5.10</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.urbanfleet</groupId>
+			<artifactId>urbanfleet-events</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,4 +1,4 @@
-package com.urbanfleet.restaurant_service.dto;
+package com.urbanfleet.events.menuItem;
 
 import lombok.*;
 

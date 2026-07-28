@@ -1,22 +1,20 @@
-package com.urbanfleet.order_service.kafka;
+package com.urbanfleet.events.delivery;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
 public class DeliveryAssignedEvent {
 
     private UUID orderId;
 
     private UUID riderId;
 
-    public DeliveryAssignedEvent(UUID riderId, UUID orderId) {
-        this.riderId = riderId;
+    public DeliveryAssignedEvent() {
+    }
+
+    public DeliveryAssignedEvent(UUID orderId, UUID riderId) {
         this.orderId = orderId;
+        this.riderId = riderId;
     }
 
     public UUID getOrderId() {

@@ -1,6 +1,6 @@
 package com.urbanfleet.delivery_service.controller;
 
-import com.urbanfleet.delivery_service.entity.DeliveryAssignment;
+import com.urbanfleet.delivery_service.entity.Delivery;
 import com.urbanfleet.delivery_service.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class DeliveryController {
 
     // Get All Assignments
     @GetMapping
-    public List<DeliveryAssignment> getAll() {
+    public List<Delivery> getAll() {
         return deliveryRepository.findAll();
     }
 }

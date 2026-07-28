@@ -2,9 +2,9 @@ package com.urbanfleet.payment_service.controller;
 
 import com.urbanfleet.payment_service.dto.PaymentRequest;
 import com.urbanfleet.payment_service.dto.PaymentResponse;
-import com.urbanfleet.payment_service.kafka.PaymentEvent;
 import com.urbanfleet.payment_service.kafka.PaymentEventProducer;
 import com.urbanfleet.payment_service.service.PaymentService;
+import com.urbanfleet.events.payment.PaymentEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

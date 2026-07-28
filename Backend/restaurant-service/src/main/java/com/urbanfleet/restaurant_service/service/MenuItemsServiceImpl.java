@@ -1,6 +1,6 @@
 package com.urbanfleet.restaurant_service.service;
 
-import com.urbanfleet.restaurant_service.dto.MenuItemEvent;
+
 import com.urbanfleet.restaurant_service.dto.MenuItemRequest;
 import com.urbanfleet.restaurant_service.dto.MenuItemResponse;
 import com.urbanfleet.restaurant_service.exceptions.MenuItemNotFoundException;
@@ -12,6 +12,7 @@ import com.urbanfleet.restaurant_service.model.Restaurant;
 import com.urbanfleet.restaurant_service.repository.CategoryRepository;
 import com.urbanfleet.restaurant_service.repository.MenuItemsRepository;
 import com.urbanfleet.restaurant_service.repository.RestaurantRepository;
+import com.urbanfleet.events.menuItem.MenuItemEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -68,6 +68,12 @@ public class Restaurant {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     // Automatically set timestamps unless we give while inserting
     @PrePersist
     public void prePersist() {

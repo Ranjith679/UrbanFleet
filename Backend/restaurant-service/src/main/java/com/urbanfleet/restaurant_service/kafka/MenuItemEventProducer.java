@@ -1,6 +1,7 @@
 package com.urbanfleet.restaurant_service.kafka;
 
-import com.urbanfleet.restaurant_service.dto.MenuItemEvent;
+
+import com.urbanfleet.events.menuItem.MenuItemEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

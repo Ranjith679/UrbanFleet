@@ -1,6 +1,6 @@
 package com.urbanfleet.delivery_service.kafka;
 
-import lombok.RequiredArgsConstructor;
+import com.urbanfleet.events.delivery.DeliveryAssignedEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,8 @@
-package com.urbanfleet.restaurant_service.dto;
+package com.urbanfleet.events.restaurant;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor

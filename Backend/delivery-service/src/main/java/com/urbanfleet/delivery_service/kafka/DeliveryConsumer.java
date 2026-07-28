@@ -1,7 +1,7 @@
 package com.urbanfleet.delivery_service.kafka;
 
 import com.urbanfleet.delivery_service.service.DeliveryService;
-import lombok.extern.slf4j.Slf4j;
+import com.urbanfleet.events.payment.PaymentEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;

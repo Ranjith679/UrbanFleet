@@ -3,15 +3,16 @@ package com.urbanfleet.delivery_service.service;
 import com.urbanfleet.delivery_service.constants.DeliveryStatus;
 import com.urbanfleet.delivery_service.entity.Delivery;
 import com.urbanfleet.delivery_service.entity.Rider;
-import com.urbanfleet.delivery_service.kafka.DeliveryAssignedEvent;
 import com.urbanfleet.delivery_service.kafka.DeliveryProducer;
 import com.urbanfleet.delivery_service.repository.DeliveryRepository;
 import com.urbanfleet.delivery_service.repository.RiderRepository;
-import lombok.RequiredArgsConstructor;
+import com.urbanfleet.events.delivery.DeliveryAssignedEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class DeliveryService {
 
@@ -28,6 +29,8 @@ public class DeliveryService {
     }
 
     public void assign(UUID orderId) {
+
+        log.info("Assigning delivery for order {}", orderId);
 
         // Find one available rider
         Rider rider = riderRepository
@@ -51,6 +54,7 @@ public class DeliveryService {
 
         deliveryRepository.save(delivery);
 
+        log.info("Publishing DeliveryAssignedEvent for order {}", orderId);
         // Notify Order Service
         producer.send(new DeliveryAssignedEvent(orderId, rider.getId()));
     }

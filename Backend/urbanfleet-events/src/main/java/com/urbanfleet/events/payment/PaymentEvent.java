@@ -1,8 +1,4 @@
-package com.urbanfleet.order_service.kafka;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.urbanfleet.events.payment;
 
 import java.util.UUID;
 
@@ -12,6 +8,7 @@ public class PaymentEvent {
     private String eventType;
 
     private UUID orderId;
+
 
     public PaymentEvent() {
     }
@@ -36,4 +33,5 @@ public class PaymentEvent {
     public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
+
 }

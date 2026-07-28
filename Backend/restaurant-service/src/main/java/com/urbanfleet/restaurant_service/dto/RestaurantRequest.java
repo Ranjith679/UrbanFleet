@@ -28,6 +28,8 @@ public class RestaurantRequest {
     private UUID ownerId;
 
 
+
+
     public String getName() {
         return name;
     }

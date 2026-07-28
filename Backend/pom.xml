@@ -56,6 +56,7 @@
      <module>order-service</module>
      <module>payment-service</module>
      <module>delivery-service</module>
+    <module>urbanfleet-events</module>
     <!-- <module>notification-service</module> -->
     <!-- <module>tracking-service</module> -->
   </modules>

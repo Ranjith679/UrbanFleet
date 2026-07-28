@@ -1,4 +1,4 @@
-package com.urbanfleet.order_service.kafka;
+package com.urbanfleet.events.order;
 
 import lombok.NoArgsConstructor;
 
