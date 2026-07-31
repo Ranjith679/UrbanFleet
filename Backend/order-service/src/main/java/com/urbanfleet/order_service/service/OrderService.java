@@ -145,4 +145,18 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public RestaurantLocationResponse getRestaurantLocation(UUID orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        RestaurantResponse restaurant =
+                restaurantClient.getRestaurant(order.getRestaurantId());
+
+        return new RestaurantLocationResponse(
+                restaurant.getLatitude(),
+                restaurant.getLongitude()
+        );
+    }
+
 }
