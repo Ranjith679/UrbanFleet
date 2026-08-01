@@ -14,6 +14,7 @@ import com.urbanfleet.events.delivery.DeliveryAssignedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,6 +60,8 @@ public class DeliveryService {
         delivery.setRiderId(nearest.getId());
 
         delivery.setStatus(DeliveryStatus.ASSIGNED);
+
+        delivery.setAssignedAt(LocalDateTime.now());
 
         delivery.setRetryCount(0);
 
@@ -144,7 +147,7 @@ public class DeliveryService {
         assignNextRider(delivery);
     }
 
-    private void assignNextRider(Delivery delivery) {
+    public void assignNextRider(Delivery delivery) {
 
         // Stop retrying after 3 attempts
         if (delivery.getRetryCount() >= 3) {
@@ -179,6 +182,7 @@ public class DeliveryService {
 
         delivery.setRetryCount(delivery.getRetryCount() + 1);
         delivery.setStatus(DeliveryStatus.ASSIGNED);
+        delivery.setAssignedAt(LocalDateTime.now());
 
         deliveryRepository.save(delivery);
 
@@ -222,6 +226,71 @@ public class DeliveryService {
                         delivery.getOrderId(),
                         riderId
                 )
+        );
+    }
+
+
+    /***
+     * PICKUP METHOD
+     */
+
+    public void pickup(UUID deliveryId){
+
+        Delivery delivery =
+                deliveryRepository.findById(deliveryId)
+                        .orElseThrow();
+
+        if(delivery.getStatus() != DeliveryStatus.ACCEPTED){
+
+            throw new RuntimeException(
+                    "Delivery must be ACCEPTED first."
+            );
+        }
+
+        delivery.setStatus(DeliveryStatus.PICKED_UP);
+
+        deliveryRepository.save(delivery);
+
+        log.info(
+                "Delivery {} picked up.",
+                deliveryId
+        );
+    }
+
+
+    /***
+     * DELIVERY COMPLETE METHOD and me=akes the rider available for next irder
+     */
+
+    public void complete(UUID deliveryId){
+
+        Delivery delivery =
+                deliveryRepository.findById(deliveryId)
+                        .orElseThrow();
+
+        if(delivery.getStatus() != DeliveryStatus.PICKED_UP){
+
+            throw new RuntimeException(
+                    "Food has not been picked up."
+            );
+        }
+
+        delivery.setStatus(DeliveryStatus.DELIVERED);
+
+        Rider rider =
+                riderRepository.findById(
+                                delivery.getRiderId())
+                        .orElseThrow();
+
+        rider.setAvailable(true);
+
+        riderRepository.save(rider);
+
+        deliveryRepository.save(delivery);
+
+        log.info(
+                "Delivery {} completed.",
+                deliveryId
         );
     }
 }

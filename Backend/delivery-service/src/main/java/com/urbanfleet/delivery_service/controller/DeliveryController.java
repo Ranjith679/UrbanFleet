@@ -15,6 +15,7 @@ import java.util.UUID;
 public class DeliveryController {
 
     private final DeliveryRepository deliveryRepository;
+    private final DeliveryService deliveryService;
     private final DeliveryService service;
 
     // Get All Assignments
@@ -35,5 +36,19 @@ public class DeliveryController {
             @PathVariable UUID deliveryId) {
 
         service.reject(deliveryId);
+    }
+
+    @PostMapping("/{deliveryId}/pickup")
+    public void pickup(
+            @PathVariable UUID deliveryId){
+
+        deliveryService.pickup(deliveryId);
+    }
+
+    @PostMapping("/{deliveryId}/complete")
+    public void complete(
+            @PathVariable UUID deliveryId){
+
+        deliveryService.complete(deliveryId);
     }
 }

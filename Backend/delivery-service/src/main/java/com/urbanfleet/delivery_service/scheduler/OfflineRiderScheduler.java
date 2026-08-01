@@ -1,4 +1,4 @@
-package com.urbanfleet.delivery_service.utility;
+package com.urbanfleet.delivery_service.scheduler;
 
 import com.urbanfleet.delivery_service.entity.Rider;
 import com.urbanfleet.delivery_service.repository.RiderRepository;
@@ -21,7 +21,7 @@ public class OfflineRiderScheduler {
 
     private final DeliveryService deliveryService;
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 3000000)
     public void checkOfflineRiders() {
 
         List<Rider> riders = riderRepository.findByOfflineFalse();
