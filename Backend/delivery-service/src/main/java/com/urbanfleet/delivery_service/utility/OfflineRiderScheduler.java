@@ -2,6 +2,7 @@ package com.urbanfleet.delivery_service.utility;
 
 import com.urbanfleet.delivery_service.entity.Rider;
 import com.urbanfleet.delivery_service.repository.RiderRepository;
+import com.urbanfleet.delivery_service.service.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +18,8 @@ import java.util.List;
 public class OfflineRiderScheduler {
 
     private final RiderRepository riderRepository;
+
+    private final DeliveryService deliveryService;
 
     @Scheduled(fixedRate = 30000)
     public void checkOfflineRiders() {
@@ -43,6 +46,8 @@ public class OfflineRiderScheduler {
                 rider.setAvailable(false);
 
                 riderRepository.save(rider);
+
+                deliveryService.reassignOfflineRider(rider.getId());
 
                 log.warn(
                         "Rider {} marked OFFLINE. Last location update {} seconds ago.",

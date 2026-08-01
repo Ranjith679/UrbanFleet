@@ -174,6 +174,9 @@ public class DeliveryService {
 
         // Update existing delivery assignment
         delivery.setRiderId(nearest.getId());
+
+        log.info("retry count = {}", delivery.getRetryCount());
+
         delivery.setRetryCount(delivery.getRetryCount() + 1);
         delivery.setStatus(DeliveryStatus.ASSIGNED);
 
@@ -189,6 +192,35 @@ public class DeliveryService {
                 new DeliveryAssignedEvent(
                         delivery.getOrderId(),
                         nearest.getId()
+                )
+        );
+    }
+
+    public void reassignOfflineRider(UUID riderId) {
+
+        Delivery delivery = deliveryRepository
+                .findByRiderIdAndStatus(
+                        riderId,
+                        DeliveryStatus.ASSIGNED)
+                .orElse(null);
+
+        if (delivery == null) {
+
+            log.info("No assigned delivery for offline rider {}", riderId);
+
+            return;
+        }
+
+        log.info("Reassigning delivery {} because rider {} went offline",
+                delivery.getId(),
+                riderId);
+
+        assignNextRider(delivery);
+
+        producer.sendAssigned(
+                new DeliveryAssignedEvent(
+                        delivery.getOrderId(),
+                        riderId
                 )
         );
     }

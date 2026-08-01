@@ -1,5 +1,7 @@
 package com.urbanfleet.delivery_service.repository;
 
+import com.urbanfleet.delivery_service.constants.DeliveryStatus;
+import com.urbanfleet.delivery_service.entity.Delivery;
 import com.urbanfleet.delivery_service.entity.Rider;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +15,6 @@ public interface RiderRepository
     List<Rider> findByAvailableTrue();
 
     List<Rider> findByOfflineFalse();
+
+
 }
