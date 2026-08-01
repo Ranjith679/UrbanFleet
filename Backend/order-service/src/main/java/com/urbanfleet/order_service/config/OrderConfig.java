@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -23,11 +24,12 @@ public class OrderConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/h2-console/**").permitAll().anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }

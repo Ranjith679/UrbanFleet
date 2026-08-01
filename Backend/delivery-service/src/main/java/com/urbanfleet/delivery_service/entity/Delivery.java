@@ -25,6 +25,9 @@ public class Delivery {
     // Current delivery status
     private DeliveryStatus status;
 
+    private Integer retryCount;
+
+
     public UUID getId() {
         return id;
     }
@@ -55,5 +58,13 @@ public class Delivery {
 
     public void setStatus(DeliveryStatus status) {
         this.status = status;
+    }
+
+    public Integer getRetryCount() {
+        return retryCount;
+    }
+
+    public void setRetryCount(Integer retryCount) {
+        this.retryCount = retryCount;
     }
 }

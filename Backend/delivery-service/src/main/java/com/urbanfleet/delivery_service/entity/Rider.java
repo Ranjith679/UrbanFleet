@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -25,4 +26,6 @@ public class Rider {
 
     // Can rider take new order?
     private boolean available;
+
+    private LocalDateTime lastLocationUpdate;
 }

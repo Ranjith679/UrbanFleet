@@ -154,8 +154,8 @@ public class OrderService {
                 restaurantClient.getRestaurant(order.getRestaurantId());
 
         return new RestaurantLocationResponse(
-                restaurant.getLatitude(),
-                restaurant.getLongitude()
+                (restaurant.getLatitude() != null) ? restaurant.getLatitude() : 11.0168,
+                (restaurant.getLongitude() != null ) ? restaurant.getLongitude() : 76.9558
         );
     }
 

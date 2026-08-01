@@ -79,6 +79,8 @@ public class Restaurant {
     public void prePersist() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+        if (latitude == null) latitude = 11.0168;
+        if (longitude == null) longitude = 76.9558;
     }
 
     // Auto assign while updating unless we give

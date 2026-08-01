@@ -28,6 +28,11 @@ public class RestaurantRequest {
     private UUID ownerId;
 
 
+    @NotNull(message = "Latitude is required")
+    private Double latitude;
+
+    @NotNull(message = "Longitude is required")
+    private Double longitude;
 
 
     public String getName() {
@@ -70,4 +75,19 @@ public class RestaurantRequest {
         this.ownerId = ownerId;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 }

@@ -32,6 +32,8 @@ public class RestaurantServiceImpl implements RestaurantService{
                 .city(request.getCity())
                 .ownerId(request.getOwnerId())
                 .imageUrls(imageUrls != null ? imageUrls : new ArrayList<>())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
                 .build();
 
         Restaurant saved = repository.save(restaurant);
@@ -59,6 +61,8 @@ public class RestaurantServiceImpl implements RestaurantService{
         response.setAddress(restaurant.getAddress());
         response.setCity(restaurant.getCity());
         response.setOwnerId(restaurant.getOwnerId());
+        response.setLatitude(restaurant.getLatitude());
+        response.setLongitude(restaurant.getLongitude());
 
         List<String> urls = new ArrayList<>();        for (String fileName : restaurant.getImageUrls()){
             try {
