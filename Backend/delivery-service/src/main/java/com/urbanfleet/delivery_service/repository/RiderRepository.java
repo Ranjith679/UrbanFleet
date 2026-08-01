@@ -11,4 +11,6 @@ public interface RiderRepository
         extends JpaRepository<Rider, UUID> {
 
     List<Rider> findByAvailableTrue();
+
+    List<Rider> findByOfflineFalse();
 }

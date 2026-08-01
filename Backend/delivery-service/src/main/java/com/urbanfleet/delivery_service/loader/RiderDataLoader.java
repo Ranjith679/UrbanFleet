@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -26,18 +27,24 @@ public class RiderDataLoader implements CommandLineRunner {
         rider1.setLatitude(12.9716);
         rider1.setLongitude(80.2200);
         rider1.setAvailable(true);
+        rider1.setLastLocationUpdate(LocalDateTime.now());
+        rider1.setOffline(false);
 
         Rider rider2 = new Rider();
         rider2.setName("Alex");
         rider2.setLatitude(12.9780);
         rider2.setLongitude(80.2300);
         rider2.setAvailable(true);
+        rider2.setLastLocationUpdate(LocalDateTime.now());
+        rider2.setOffline(false);
 
         Rider rider3 = new Rider();
         rider3.setName("David");
         rider3.setLatitude(12.9900);
         rider3.setLongitude(80.2500);
         rider3.setAvailable(true);
+        rider3.setLastLocationUpdate(LocalDateTime.now());
+        rider3.setOffline(false);
 
         repository.saveAll(List.of(rider1, rider2, rider3));
     }

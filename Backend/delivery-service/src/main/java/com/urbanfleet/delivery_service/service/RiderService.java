@@ -29,6 +29,8 @@ public class RiderService {
 
         rider.setLongitude(request.getLongitude());
 
+        rider.setOffline(false);
+
         rider.setLastLocationUpdate(LocalDateTime.now());
 
         log.info("Updated location for rider {}", rider.getId());

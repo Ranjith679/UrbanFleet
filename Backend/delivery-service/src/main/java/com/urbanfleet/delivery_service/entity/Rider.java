@@ -28,4 +28,6 @@ public class Rider {
     private boolean available;
 
     private LocalDateTime lastLocationUpdate;
+
+    private boolean offline;
 }
