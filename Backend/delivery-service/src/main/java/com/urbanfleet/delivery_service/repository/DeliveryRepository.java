@@ -17,4 +17,6 @@ public interface DeliveryRepository
 
     List<Delivery> findByStatus(DeliveryStatus status);
 
+    Optional<Delivery> findByOrderId(UUID orderId);
+
 }

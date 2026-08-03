@@ -2,15 +2,17 @@ package com.urbanfleet.delivery_service.service;
 
 import com.urbanfleet.delivery_service.clients.OrderClient;
 import com.urbanfleet.delivery_service.constants.DeliveryStatus;
+import com.urbanfleet.delivery_service.dto.CustomerLocationResponse;
+import com.urbanfleet.delivery_service.dto.DeliveryTrackingResponse;
 import com.urbanfleet.delivery_service.dto.RestaurantLocationResponse;
 import com.urbanfleet.delivery_service.entity.Delivery;
 import com.urbanfleet.delivery_service.entity.Rider;
-import com.urbanfleet.delivery_service.kafka.DeliveryProducer;
+import com.urbanfleet.delivery_service.kafka.DeliveryEventProducer;
 import com.urbanfleet.delivery_service.repository.DeliveryRepository;
 import com.urbanfleet.delivery_service.repository.RiderRepository;
 import com.urbanfleet.delivery_service.utility.DistanceCalculator;
-import com.urbanfleet.events.delivery.DeliveryAcceptedEvent;
-import com.urbanfleet.events.delivery.DeliveryAssignedEvent;
+import com.urbanfleet.events.delivery.*;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +30,11 @@ public class DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
 
-    private final DeliveryProducer producer;
+    private final DeliveryEventProducer producer;
 
     private final OrderClient orderClient;
 
-    public DeliveryService(RiderRepository riderRepository, DeliveryRepository deliveryRepository, DeliveryProducer producer, OrderClient orderClient, RiderService riderService) {
+    public DeliveryService(RiderRepository riderRepository, DeliveryRepository deliveryRepository, DeliveryEventProducer producer, OrderClient orderClient, RiderService riderService) {
         this.riderRepository = riderRepository;
         this.deliveryRepository = deliveryRepository;
         this.producer = producer;
@@ -69,7 +71,7 @@ public class DeliveryService {
 
         log.info("Publishing DeliveryAssignedEvent for order {}", orderId);
 
-        producer.sendAssigned(new DeliveryAssignedEvent(orderId, nearest.getId()));
+        producer.publishAssigned(new DeliveryAssignedEvent(orderId, nearest.getId()));
     }
 
 
@@ -126,7 +128,7 @@ public class DeliveryService {
                 delivery.getRiderId());
 
         // Publish Kafka event (we'll create this next)
-        producer.sendAccepted(
+        producer.publishAccepted(
                 new DeliveryAcceptedEvent(
                         delivery.getOrderId(),
                         delivery.getRiderId()
@@ -157,6 +159,14 @@ public class DeliveryService {
             deliveryRepository.save(delivery);
 
             log.info("Delivery cancelled after 3 retries for order {}", delivery.getOrderId());
+
+            producer.publishCancelled(
+                    new DeliveryCancelledEvent(
+                            delivery.getId(),
+                            delivery.getOrderId(),
+                            delivery.getRiderId(),"All riders rejected/ did not accepted your delivery request"
+                    )
+            );
 
             return;
         }
@@ -192,7 +202,7 @@ public class DeliveryService {
                 delivery.getRetryCount());
 
         // Notify other services
-        producer.sendAssigned(
+        producer.publishAssigned(
                 new DeliveryAssignedEvent(
                         delivery.getOrderId(),
                         nearest.getId()
@@ -221,7 +231,7 @@ public class DeliveryService {
 
         assignNextRider(delivery);
 
-        producer.sendAssigned(
+        producer.publishAssigned(
                 new DeliveryAssignedEvent(
                         delivery.getOrderId(),
                         riderId
@@ -255,6 +265,8 @@ public class DeliveryService {
                 "Delivery {} picked up.",
                 deliveryId
         );
+
+        producer.publishPickedUp(new DeliveryPickedUpEvent(deliveryId, delivery.getOrderId(),delivery.getRiderId()));
     }
 
 
@@ -292,5 +304,63 @@ public class DeliveryService {
                 "Delivery {} completed.",
                 deliveryId
         );
+
+        producer.publishCompleted(
+                new DeliveryCompletedEvent(
+                        delivery.getId(),
+                        delivery.getOrderId(),
+                        delivery.getRiderId()
+                )
+        );
+    }
+
+
+    @Transactional
+    public DeliveryTrackingResponse trackOrder(UUID orderId) {
+
+        Delivery delivery = deliveryRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Delivery not found"));
+
+        Rider rider = riderRepository.findById(delivery.getRiderId())
+                .orElseThrow(() -> new RuntimeException("Rider not found"));
+
+        CustomerLocationResponse customer =
+                orderClient.getCustomerLocation(orderId);
+
+        double remainingDistance =
+                DistanceCalculator.distance(
+                        rider.getLatitude(),
+                        rider.getLongitude(),
+                        customer.getLatitude(),
+                        customer.getLongitude()
+                );
+
+        int eta =
+                (int) Math.ceil((remainingDistance / 30.0) * 60);
+
+        DeliveryTrackingResponse response =
+                new DeliveryTrackingResponse();
+
+        response.setOrderId(delivery.getOrderId());
+
+        response.setRiderId(rider.getId());
+
+        response.setRiderLatitude(rider.getLatitude());
+
+        response.setRiderLongitude(rider.getLongitude());
+
+        response.setCustomerLatitude(customer.getLatitude());
+
+        response.setCustomerLongitude(customer.getLongitude());
+
+        response.setRemainingDistanceKm(
+                Math.round(remainingDistance * 100.0) / 100.0
+        );
+
+        response.setEstimatedArrivalMinutes(eta);
+
+        response.setDeliveryStatus(delivery.getStatus());
+
+        return response;
     }
 }

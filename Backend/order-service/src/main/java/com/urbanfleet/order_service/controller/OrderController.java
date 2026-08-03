@@ -2,6 +2,7 @@ package com.urbanfleet.order_service.controller;
 
 import com.urbanfleet.order_service.constants.OrderAction;
 import com.urbanfleet.order_service.dto.CreateOrderRequest;
+import com.urbanfleet.order_service.dto.CustomerLocationResponse;
 import com.urbanfleet.order_service.dto.RestaurantLocationResponse;
 import com.urbanfleet.order_service.entity.Order;
 import com.urbanfleet.order_service.service.OrderService;
@@ -49,5 +50,12 @@ public class OrderController {
                         event
                 )
         );
+    }
+
+    @GetMapping("/internal/order/{orderId}/customer-location")
+    public CustomerLocationResponse getCustomerLocation(
+            @PathVariable UUID orderId) {
+
+        return service.getCustomerLocation(orderId);
     }
 }

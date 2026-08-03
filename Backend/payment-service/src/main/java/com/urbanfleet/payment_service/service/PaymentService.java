@@ -148,7 +148,7 @@ public class PaymentService {
         repository.save(payment);
 
         // Notify Order Service
-        producer.send(
+        producer.publishSuccess(
                 new PaymentEvent(
                         "payment.success",
                         payment.getOrderId()

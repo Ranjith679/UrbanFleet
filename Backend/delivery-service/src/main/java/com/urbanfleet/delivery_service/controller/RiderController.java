@@ -5,12 +5,14 @@ import com.urbanfleet.delivery_service.entity.Rider;
 import com.urbanfleet.delivery_service.repository.RiderRepository;
 import com.urbanfleet.delivery_service.service.RiderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/riders")
 @RequiredArgsConstructor
@@ -36,6 +38,8 @@ public class RiderController {
     public ResponseEntity<Void> updateLocation(@PathVariable UUID id, @RequestBody RiderLocationRequest request) {
 
            service.updateLocation(id, request);
+
+           log.info("rider location updated to {} - {}", request.getLatitude(), request.getLongitude());
 
            return ResponseEntity.ok().build();
     }

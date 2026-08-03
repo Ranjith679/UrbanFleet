@@ -1,9 +1,11 @@
 package com.urbanfleet.delivery_service.controller;
 
+import com.urbanfleet.delivery_service.dto.DeliveryTrackingResponse;
 import com.urbanfleet.delivery_service.entity.Delivery;
 import com.urbanfleet.delivery_service.repository.DeliveryRepository;
 import com.urbanfleet.delivery_service.service.DeliveryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,5 +52,14 @@ public class DeliveryController {
             @PathVariable UUID deliveryId){
 
         deliveryService.complete(deliveryId);
+    }
+
+    @GetMapping("/track/{orderId}")
+    public ResponseEntity<DeliveryTrackingResponse> trackOrder(
+            @PathVariable UUID orderId) {
+
+        return ResponseEntity.ok(
+                deliveryService.trackOrder(orderId)
+        );
     }
 }

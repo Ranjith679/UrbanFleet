@@ -4,20 +4,37 @@ import com.urbanfleet.events.payment.PaymentEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class PaymentEventProducer {
 
-    private final KafkaTemplate<String, PaymentEvent> kafkaTemplate;
+    private static final String TOPIC = "payment-events";
 
-    public void send(PaymentEvent event) {
-        log.info("Publishing payment event {}", event);
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-        kafkaTemplate.send("payment-events", event);
+    public void publishSuccess(PaymentEvent event) {
 
-        log.info("Published successfully");
+        kafkaTemplate.send(
+                TOPIC,
+                event.getOrderId().toString(),
+                event
+        );
+
+        log.info("Published Payment Success Event : {}", event);
     }
+
+    public void publishFailed(PaymentEvent event) {
+
+        kafkaTemplate.send(
+                TOPIC,
+                event.getOrderId().toString(),
+                event
+        );
+
+        log.info("Published Payment Failed Event : {}", event);
+    }
+
 }

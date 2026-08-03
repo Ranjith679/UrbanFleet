@@ -27,21 +27,24 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
       properties:
         spring.json.add.type.headers: true
 
-
     consumer:
-      group-id: order-service
+      group-id: order-service   # Change per service
       auto-offset-reset: earliest
-      # Deserialize Kafka key
+
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      # Deserialize Kafka value
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
       properties:
-        spring.json.trusted.packages: "*"
         spring.json.use.type.headers: true
+        spring.json.trusted.packages: com.urbanfleet.events.*
+
+    listener:
+      ack-mode: record
+      missing-topics-fatal: false
 
 
 eureka:

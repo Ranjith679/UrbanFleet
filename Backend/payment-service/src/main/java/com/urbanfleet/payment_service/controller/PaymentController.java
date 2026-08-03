@@ -50,6 +50,6 @@ public class PaymentController {
 
         System.out.println("sending kafka event");
 
-        producer.send(new PaymentEvent("payment.success", orderId));
+        producer.publishSuccess(new PaymentEvent("payment.success", orderId));
     }
 }

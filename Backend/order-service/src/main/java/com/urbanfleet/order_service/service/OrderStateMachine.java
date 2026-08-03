@@ -7,117 +7,116 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderStateMachine {
 
-    // service used for changing states in correct order like real apps
-
-    /*
-
- CREATED
-   |
-   | CONFIRM
-   v
- PAID
-   |
-   | START_PREPARING
-   v
-PREPARING
-   |
-   | MARK_READY
-   v
- PICKED_UP
-   |
-   | COMPLETE
-   v
- DELIVERED
-
-CANCEL can happen from:
-CREATED
-PAID
-PREPARING
-
-     */
-
-    // Decides what the next order status should be
-    public OrderStatus nextState(
-            OrderStatus currentStatus,
-            OrderAction action
-    ) {
+    public OrderStatus nextState(OrderStatus currentStatus,
+                                 OrderAction action) {
 
         return switch (currentStatus) {
 
-            // ==========================
-            // Order just created
-            // ==========================
+            // =====================================================
+            // Order Created
+            // =====================================================
             case CREATED -> switch (action) {
 
-                // Customer paid / restaurant accepted
-                case CONFIRM -> OrderStatus.PAID;
+                case CONFIRM_PAYMENT -> OrderStatus.PAID;
 
-                // Order cancelled before processing
                 case CANCEL -> OrderStatus.CANCELLED;
 
                 default -> throw new RuntimeException(
-                        "Invalid action for CREATED order"
-                );
+                        "Invalid action " + action + " for CREATED");
             };
 
-            // ==========================
-            // Payment completed
-            // ==========================
+            // =====================================================
+            // Payment Successful
+            // =====================================================
             case PAID -> switch (action) {
 
-                // Restaurant starts cooking
                 case START_PREPARING -> OrderStatus.PREPARING;
 
-                // Customer cancels
+                case ASSIGN_DELIVERY -> OrderStatus.DELIVERY_ASSIGNED;
+
                 case CANCEL -> OrderStatus.CANCELLED;
 
                 default -> throw new RuntimeException(
-                        "Invalid action for PAID order"
-                );
+                        "Invalid action " + action + " for PAID");
             };
 
-            // ==========================
-            // Food is being prepared
-            // ==========================
+            // =====================================================
+            // Restaurant Preparing Food
+            // =====================================================
             case PREPARING -> switch (action) {
 
-                // Food ready and handed to rider
-                case MARK_READY -> OrderStatus.PICKED_UP;
+                case MARK_READY -> OrderStatus.READY;
 
-                // Optional:
-                // Some companies allow cancellation until food is ready
                 case CANCEL -> OrderStatus.CANCELLED;
 
                 default -> throw new RuntimeException(
-                        "Invalid action for PREPARING order"
-                );
+                        "Invalid action " + action + " for PREPARING");
             };
 
-            // ==========================
-            // Rider picked up order
-            // ==========================
-            case PICKED_UP -> switch (action) {
+            // =====================================================
+            // Food Ready
+            // =====================================================
+            case READY -> switch (action) {
 
-                // Delivered successfully
+                case ASSIGN_DELIVERY -> OrderStatus.DELIVERY_ASSIGNED;
+
+                case CANCEL -> OrderStatus.CANCELLED;
+
+                default -> throw new RuntimeException(
+                        "Invalid action " + action + " for READY");
+            };
+
+            // =====================================================
+            // Rider Assigned
+            // =====================================================
+            case DELIVERY_ASSIGNED -> switch (action) {
+
+                /*
+                 * Rider accepted the delivery.
+                 * Order status remains DELIVERY_ASSIGNED because
+                 * customer still sees "Rider Assigned".
+                 */
+                case DELIVERY_ACCEPTED -> OrderStatus.DELIVERY_ASSIGNED;
+
+                /*
+                 * Rider collected the food.
+                 */
+                case PICKUP_ORDER -> OrderStatus.OUT_FOR_DELIVERY;
+
+                /*
+                 * Rider rejected.
+                 * Another rider will be assigned.
+                 * Status doesn't change.
+                 */
+                case ASSIGN_DELIVERY -> OrderStatus.DELIVERY_ASSIGNED;
+
+                case CANCEL -> OrderStatus.CANCELLED;
+
+                default -> throw new RuntimeException(
+                        "Invalid action " + action + " for DELIVERY_ASSIGNED");
+            };
+
+            // =====================================================
+            // Rider is delivering
+            // =====================================================
+            case OUT_FOR_DELIVERY -> switch (action) {
+
                 case COMPLETE -> OrderStatus.DELIVERED;
 
                 default -> throw new RuntimeException(
-                        "Invalid action for PICKED_UP order"
-                );
+                        "Invalid action " + action + " for OUT_FOR_DELIVERY");
             };
 
-            // ==========================
-            // Final states
-            // ==========================
+            // =====================================================
+            // Final States
+            // =====================================================
             case DELIVERED ->
                     throw new RuntimeException(
-                            "Order already delivered"
-                    );
+                            "Order already delivered");
 
             case CANCELLED ->
                     throw new RuntimeException(
-                            "Order already cancelled"
-                    );
+                            "Order already cancelled");
         };
     }
 }

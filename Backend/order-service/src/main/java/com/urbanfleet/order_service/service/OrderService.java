@@ -11,6 +11,7 @@ import com.urbanfleet.order_service.kafka.OrderEventProducer;
 import com.urbanfleet.order_service.repositories.OrderItemRepository;
 import com.urbanfleet.order_service.repositories.OrderRepository;
 import com.urbanfleet.events.order.OrderEvent;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +157,36 @@ public class OrderService {
         return new RestaurantLocationResponse(
                 (restaurant.getLatitude() != null) ? restaurant.getLatitude() : 11.0168,
                 (restaurant.getLongitude() != null ) ? restaurant.getLongitude() : 76.9558
+        );
+    }
+
+    @Transactional
+    public void processAction(UUID orderId, OrderAction action) {
+
+        log.info("OrderId received = {}", orderId);
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        OrderStatus nextStatus =
+                stateMachine.nextState(order.getStatus(), action);
+
+        order.setStatus(nextStatus);
+
+        orderRepository.save(order);
+
+        log.info("Order {} -> {}", orderId, nextStatus);
+    }
+
+
+    public CustomerLocationResponse getCustomerLocation(UUID orderId) {
+
+        orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        return new CustomerLocationResponse(
+                11.0254,
+                76.9647
         );
     }
 
