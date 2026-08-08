@@ -56,4 +56,17 @@ public class DeliveryEventProducer {
 
         log.info("Published DeliveryCancelledEvent : {}", event);
     }
+
+    public void publishLocationUpdated(RiderLocationUpdatedEvent event) {
+
+        kafkaTemplate.send(TOPIC, event.getOrderId().toString(), event);
+
+        log.info(
+                "Published RiderLocationUpdatedEvent: orderId={}, riderId={}, lat={}, lon={}",
+                event.getOrderId(),
+                event.getRiderId(),
+                event.getLatitude(),
+                event.getLongitude()
+        );
+    }
 }

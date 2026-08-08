@@ -1,11 +1,6 @@
 package com.urbanfleet.order_service.kafka;
 
-import com.urbanfleet.events.delivery.DeliveryAcceptedEvent;
-import com.urbanfleet.events.delivery.DeliveryAssignedEvent;
-import com.urbanfleet.events.delivery.DeliveryCancelledEvent;
-import com.urbanfleet.events.delivery.DeliveryCompletedEvent;
-import com.urbanfleet.events.delivery.DeliveryPickedUpEvent;
-import com.urbanfleet.events.delivery.DeliveryRejectedEvent;
+import com.urbanfleet.events.delivery.*;
 import com.urbanfleet.order_service.constants.OrderAction;
 import com.urbanfleet.order_service.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -93,6 +88,18 @@ public class DeliveryEventConsumer {
         orderService.processAction(
                 event.getOrderId(),
                 OrderAction.CANCEL
+        );
+    }
+
+    // ADD THIS
+    @KafkaHandler
+    public void consume(RiderLocationUpdatedEvent event) {
+
+        log.info(
+                "Rider location updated: rider={}, lat={}, lon={}",
+                event.getRiderId(),
+                event.getLatitude(),
+                event.getLongitude()
         );
     }
 }

@@ -52,10 +52,5 @@ public class OrderController {
         );
     }
 
-    @GetMapping("/internal/order/{orderId}/customer-location")
-    public CustomerLocationResponse getCustomerLocation(
-            @PathVariable UUID orderId) {
 
-        return service.getCustomerLocation(orderId);
-    }
 }

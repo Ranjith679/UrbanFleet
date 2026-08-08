@@ -1,6 +1,7 @@
 package com.urbanfleet.order_service.controller;
 
 
+import com.urbanfleet.order_service.dto.CustomerLocationResponse;
 import com.urbanfleet.order_service.dto.RestaurantLocationResponse;
 import com.urbanfleet.order_service.service.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,5 +26,12 @@ public class OrderInternalController {
             @PathVariable UUID orderId){
 
         return service.getRestaurantLocation(orderId);
+    }
+
+    @GetMapping("/{orderId}/customer-location")
+    public CustomerLocationResponse getCustomerLocation(
+            @PathVariable UUID orderId) {
+
+        return service.getCustomerLocation(orderId);
     }
 }

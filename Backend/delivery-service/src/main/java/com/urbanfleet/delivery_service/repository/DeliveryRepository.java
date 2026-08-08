@@ -19,4 +19,9 @@ public interface DeliveryRepository
 
     Optional<Delivery> findByOrderId(UUID orderId);
 
+    Optional<Delivery> findByRiderIdAndStatusIn(
+            UUID riderId,
+            List<DeliveryStatus> statuses
+    );
+
 }
